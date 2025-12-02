@@ -1,0 +1,44 @@
+[ignore]
+# Ignore dependencies and build outputs
+client/node_modules
+server/node_modules
+client/dist
+client/build
+server/dist
+
+[context]
+# High-level project description & rules
+README.md
+docs/ARCHITECTURE.md
+docs/MVP-TASKLIST.md
+
+[plan]
+# Core design principles Cursor should follow
+"Use a single React app with /tv and /play routes."
+"Backend must be Node.js + Express + Socket.io."
+"Game state is authoritative on the server (no client-side source of truth)."
+"Follow the round structure and game flow defined in the README."
+"Implement drafting, rounds, and scoring incrementally according to MVP-TASKLIST.md."
+"Prefer clear, modular code in server/game, server/socket, and client/src/components."
+"Do not introduce external backend frameworks beyond Express and Socket.io."
+"Keep all storage local (SQLite or JSON) for MVP; no cloud dependencies."
+
+[style]
+# General coding preferences
+"Use TypeScript for new frontend files if practical; otherwise, keep React components simple and typed later."
+"Use modern React with hooks (no class components)."
+"Use functional, small components over giant monolith components."
+"Prefer pure functions in game logic files (rounds, drafting, scoring)."
+
+[restrictions]
+# Things NOT to do
+"Do not add authentication or passwords; profiles are matched by name + birthday."
+"Do not add complex permissions beyond host vs non-host."
+"Do not add external services (Firebase, Supabase, Auth0, etc.) for MVP."
+"Do not over-engineer state management (no Redux needed for MVP)."
+
+[testing]
+# Testing hints for Cursor
+"Focus early tests on gameState helpers, drafting logic, and scoring functions."
+"Where possible, write small unit-style helpers for things like draft analytics, age buckets, and card weighting."
+
