@@ -1,32 +1,95 @@
 // server/socket/gameHandlers.js
 // All Socket.io event handlers for game actions.
 
-const { getOrCreateRoom, handlePlayerDisconnect } = require("../game/gameState");
-// TODO: import more helpers from game/ as they are implemented
+const { rooms, getOrCreateRoom, getRoom, addPlayerToRoom, handlePlayerDisconnect } = require("../game/gameState");
+const { findOrCreateProfile } = require("../models/players");
+const { randomRoomCode } = require("../utils/id");
 
 function registerGameHandlers(io, socket) {
-  // TODO: authenticate or identify player if needed
-
-  socket.on("join_room", ({ roomCode, profile }) => {
-    // TODO: add player to room, broadcast updated lobby state
-    console.log("join_room", { roomCode, profile });
-    const room = getOrCreateRoom(roomCode);
-    // placeholder: just echo back for now
-    socket.join(roomCode);
-    io.to(roomCode).emit("room_update", { roomCode, players: room.players || [] });
-  });
-
   socket.on("create_profile", (profileData, callback) => {
-    // TODO: call players model to find/create profile
-    console.log("create_profile", profileData);
-    // placeholder: echo back fake profile ID
-    const fakeProfileId = "profile-" + socket.id;
-    if (callback) {
-      callback({ profileId: fakeProfileId });
+    try {
+      // Call findOrCreateProfile with profileData (should have: name, birthday, gender)
+      const profile = findOrCreateProfile(profileData);
+      
+      if (!profile) {
+        if (callback) {
+          callback({ error: "Failed to create profile" });
+        }
+        return;
+      }
+      
+      // Return profile object via callback
+      if (callback) {
+        callback({ profileId: profile.id, ...profile });
+      }
+      
+      console.log("create_profile", profileData, "→ profileId:", profile.id);
+    } catch (error) {
+      console.error("Error creating profile:", error);
+      if (callback) {
+        callback({ error: "Failed to create profile", message: error.message });
+      }
     }
   });
 
-  // TODO: implement these later according to MVP-TASKLIST
+  socket.on("create_room", (callback) => {
+    try {
+      // Generate unique room code (retry if collision)
+      let roomCode;
+      let attempts = 0;
+      do {
+        roomCode = randomRoomCode(5);
+        attempts++;
+        if (attempts > 10) {
+          throw new Error("Failed to generate unique room code");
+        }
+      } while (rooms.has(roomCode));
+
+      // Create the room
+      const room = getOrCreateRoom(roomCode);
+      socket.join(roomCode);
+
+      if (callback) {
+        callback({ roomCode });
+      }
+
+      console.log("create_room", { roomCode });
+    } catch (error) {
+      console.error("Error creating room:", error);
+      if (callback) {
+        callback({ error: "Failed to create room", message: error.message });
+      }
+    }
+  });
+
+  socket.on("join_room", ({ roomCode, profile }) => {
+    try {
+      // Validate that profile object exists and has an id
+      if (!profile || !profile.id) {
+        console.error("join_room: Invalid profile data", { roomCode, profile });
+        return;
+      }
+
+      // Add player to room (room must exist - created by TV)
+      addPlayerToRoom(roomCode, socket.id, profile);
+      socket.join(roomCode);
+
+      // Broadcast updated room state to all clients in the room
+      const room = getRoom(roomCode);
+      io.to(roomCode).emit("room_update", {
+        roomCode,
+        players: room.players,
+      });
+
+      console.log("join_room", { roomCode, profileId: profile.id });
+    } catch (error) {
+      console.error("Error joining room:", error);
+      // Emit error back to the joining client
+      socket.emit("join_room_error", { error: error.message });
+    } 
+  });
+
+  // Placeholder handlers for future phases
   socket.on("set_teams", (payload) => {
     console.log("set_teams", payload);
   });
