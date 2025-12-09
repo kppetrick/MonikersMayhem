@@ -46,8 +46,14 @@ export const JoinScreen: React.FC = () => {
   const [name, setName] = useState("");
   const [birthday, setBirthday] = useState("");
   const [gender, setGender] = useState<"male" | "female" | "">("");
+  const [connectedPlayerIds, setConnectedPlayerIds] = useState<string[]>([]);
   
   const storedProfiles = getStoredProfiles();
+  
+  // Filter out profiles that are already connected to the room
+  const availableProfiles = storedProfiles.filter(
+    profile => !connectedPlayerIds.includes(profile.profileId)
+  );
   
   const handleRoomCodeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,8 +61,27 @@ export const JoinScreen: React.FC = () => {
       setError("Please enter a 5-character room code");
       return;
     }
+    
+    if (!socket || !connected) {
+      setError("Not connected to server");
+      return;
+    }
+    
     setError(null);
-    setRoomCodeEntered(true);
+    setLoading(true);
+    
+    // Validate room code exists before proceeding
+    socket.emit("validate_room", roomCode.toUpperCase(), (response: { valid?: boolean; error?: string; connectedPlayerIds?: string[] }) => {
+      setLoading(false);
+      if (response.error || !response.valid) {
+        setError(response.error || "Room code not found. Please check the code and try again.");
+        return;
+      }
+      // Store connected player IDs to filter profiles
+      setConnectedPlayerIds(response.connectedPlayerIds || []);
+      // Room is valid, proceed to profile selection
+      setRoomCodeEntered(true);
+    });
   };
 
   useEffect(() => {
@@ -68,8 +93,15 @@ export const JoinScreen: React.FC = () => {
       setLoading(false);
     });
     
+    // Listen for join room errors
+    socket.on("join_room_error", (data: { error: string }) => {
+      setError(data.error);
+      setLoading(false);
+    });
+    
     return () => {
       socket.off("room_update");
+      socket.off("join_room_error");
     };
   }, [socket]);
 
@@ -90,7 +122,13 @@ export const JoinScreen: React.FC = () => {
       
       if (selectedProfileId && !showNewProfileForm) {
         // Use existing profile from localStorage
-        profile = storedProfiles.find(p => p.profileId === selectedProfileId)!;
+        profile = availableProfiles.find(p => p.profileId === selectedProfileId)!;
+        
+        if (!profile) {
+          setError("Selected profile is no longer available");
+          setLoading(false);
+          return;
+        }
         
         // Verify profile exists on server (re-creates if needed)
         socket.emit("create_profile", { 
@@ -153,8 +191,8 @@ export const JoinScreen: React.FC = () => {
 
           {error && <div className="error">{error}</div>}
 
-          <button type="submit" disabled={!connected}>
-            Continue
+          <button type="submit" disabled={!connected || loading}>
+            {loading ? "Checking room code..." : "Continue"}
           </button>
           {!connected && <p>Connecting to server...</p>}
         </form>
@@ -176,7 +214,7 @@ export const JoinScreen: React.FC = () => {
       </button>
 
       <form onSubmit={handleProfileSubmit} noValidate>
-        {storedProfiles.length > 0 && !showNewProfileForm && (
+        {availableProfiles.length > 0 && !showNewProfileForm && (
           <>
             <label>
               Select Profile
@@ -186,13 +224,19 @@ export const JoinScreen: React.FC = () => {
                 required
               >
                 <option value="">Choose a profile...</option>
-                {storedProfiles.map((profile) => (
+                {availableProfiles.map((profile) => (
                   <option key={profile.profileId} value={profile.profileId}>
                     {profile.name} ({profile.birthday})
                   </option>
                 ))}
               </select>
             </label>
+            
+            {storedProfiles.length > availableProfiles.length && (
+              <p className="info">
+                {storedProfiles.length - availableProfiles.length} profile(s) already in room
+              </p>
+            )}
             
             <button 
               type="button" 
@@ -206,14 +250,14 @@ export const JoinScreen: React.FC = () => {
           </>
         )}
 
-        {(showNewProfileForm || storedProfiles.length === 0) && (
+        {(showNewProfileForm || availableProfiles.length === 0) && (
           <>
-            {storedProfiles.length > 0 && (
+            {availableProfiles.length > 0 && (
               <button 
                 type="button" 
                 onClick={() => {
                   setShowNewProfileForm(false);
-                  setSelectedProfileId(storedProfiles[0]?.profileId || "");
+                  setSelectedProfileId(availableProfiles[0]?.profileId || "");
                 }}
               >
                 Use Existing Profile
