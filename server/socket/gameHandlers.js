@@ -62,20 +62,63 @@ function registerGameHandlers(io, socket) {
     }
   });
 
+  socket.on("validate_room", (roomCode, callback) => {
+    try {
+      // Check if room exists
+      if (!rooms.has(roomCode)) {
+        if (callback) {
+          callback({ valid: false, error: "Room code not found" });
+        }
+        return;
+      }
+      
+      const room = getRoom(roomCode);
+      // Return list of connected players' profileIds so frontend can filter profiles
+      const connectedPlayerIds = room.players
+        .filter(p => !p.disconnected)
+        .map(p => p.profileId);
+      
+      if (callback) {
+        callback({ valid: true, connectedPlayerIds });
+      }
+    } catch (error) {
+      console.error("Error validating room:", error);
+      if (callback) {
+        callback({ valid: false, error: error.message });
+      }
+    }
+  });
+
   socket.on("join_room", ({ roomCode, profile }) => {
     try {
       // Validate that profile object exists and has an id
       if (!profile || !profile.id) {
         console.error("join_room: Invalid profile data", { roomCode, profile });
+        socket.emit("join_room_error", { error: "Invalid profile data" });
+        return;
+      }
+
+      const room = getRoom(roomCode);
+      
+      // Check if this profile is already connected in the room (from a different device)
+      const existingConnectedPlayer = room.players.find(
+        p => p.profileId === profile.id && !p.disconnected
+      );
+      
+      if (existingConnectedPlayer && existingConnectedPlayer.socketId !== socket.id) {
+        // Profile is already connected from a different device
+        socket.emit("join_room_error", { 
+          error: "This profile is already connected to the room from another device" 
+        });
         return;
       }
 
       // Add player to room (room must exist - created by TV)
+      // This will handle reconnection if same socketId
       addPlayerToRoom(roomCode, socket.id, profile);
       socket.join(roomCode);
 
       // Broadcast updated room state to all clients in the room
-      const room = getRoom(roomCode);
       io.to(roomCode).emit("room_update", {
         roomCode,
         players: room.players,

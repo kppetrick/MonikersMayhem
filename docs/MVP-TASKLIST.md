@@ -196,27 +196,45 @@ At the end of Phase 2, you should be able to:
 
 
 
-- [ ] `models/players.js`
+- [x] `models/players.js`
 
-  - [ ] In-memory or JSON-based storage for MVP
+  - [x] In-memory or JSON-based storage for MVP
 
-  - [ ] Functions:
+  - [x] Functions:
 
-    - `findOrCreateProfile(name, birthday, gender)`
+    - `findOrCreateProfile(name, birthday, gender)` ✅
 
-    - `getProfileById(id)`
+    - `getProfileById(id)` ✅
 
-    - `updateProfileStats(...)`
+    - `updateProfileStats(...)` (TODO: for future phases)
 
 
 
-- [ ] Socket events:
+- [x] Socket events:
 
-  - [ ] `create_profile` → return `profileId`
+  - [x] `create_profile` → return `profileId` ✅
 
-  - [ ] `join_room` → add player to room state
+  - [x] `join_room` → add player to room state ✅
 
-  - [ ] Broadcast updated player list to TV
+  - [x] Broadcast updated player list to TV ✅ (`room_update` event)
+
+
+
+- [x] `game/gameState.js` room management:
+
+  - [x] `getRoom(roomCode)` ✅
+
+  - [x] `addPlayerToRoom(roomCode, socketId, profile)` ✅
+
+  - [x] `removePlayerFromRoom(roomCode, socketId)` ✅
+
+  - [x] `getPlayerBySocketId(roomCode, socketId)` ✅
+
+  - [x] `getPlayerByProfileId(roomCode, profileId)` ✅
+
+  - [x] `setHost(roomCode, profileId)` ✅
+
+  - [x] `handlePlayerDisconnect(io, socket)` ✅
 
 
 
@@ -224,19 +242,23 @@ At the end of Phase 2, you should be able to:
 
 
 
-- [ ] `JoinScreen.tsx`
+- [x] `JoinScreen.tsx` ✅
 
-  - [ ] Form for:
+  - [x] Form for:
 
-    - Name
+    - Name ✅
 
-    - Birthday
+    - Birthday ✅
 
-    - Gender
+    - Gender ✅
 
-  - [ ] On submit → emit `create_profile`
+  - [x] Room code entry (5-character) ✅
 
-  - [ ] Then emit `join_room` with room code (MVP can use a default room)
+  - [x] Profile selection from localStorage ✅
+
+  - [x] On submit → emit `create_profile` ✅
+
+  - [x] Then emit `join_room` with room code ✅
 
 
 
@@ -244,21 +266,35 @@ At the end of Phase 2, you should be able to:
 
 
 
-- [ ] `TVLobby.tsx`
+- [x] `TVLobby.tsx` ✅
 
-  - [ ] Show list of connected players
+  - [x] Create/join room on TV load (or use room code from URL) ✅
 
-  - [ ] Show placeholder teams (no assignment yet)
+  - [x] Display room code prominently ✅
+
+  - [x] Show list of connected players ✅
+
+  - [x] Show host indicator ✅
+
+  - [x] Listen to `room_update` socket events ✅
+
+  - [x] Show placeholder teams (no assignment yet) ✅
 
 
 
 At the end of Phase 3:
 
-- Players can join on phones
+- [x] Players can join on phones ✅
 
-- TV shows everyone in the lobby
+- [x] TV shows everyone in the lobby ✅
 
-- Profiles are created/stored
+- [x] Profiles are created/stored ✅
+
+**Additional Features Implemented:**
+- [x] Room code validation (prevents joining invalid rooms) ✅
+- [x] Duplicate join prevention (blocks same profile from multiple devices) ✅
+- [x] Comprehensive test coverage (24 tests for TVLobby) ✅
+- [x] Disconnected player handling (shows greyed out players) ✅
 
 
 

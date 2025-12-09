@@ -722,7 +722,22 @@ Additional setup (later):
 
 ---
 
+## 📊 Current Status
 
+**Completed:**
+- ✅ Phase 1: Backend Skeleton (Express + Socket.io server)
+- ✅ Phase 2: React Client Skeleton (TV and phone routes)
+- ✅ Phase 3 Backend: Player profiles, room management, socket handlers
+- ✅ Phase 3 Phone: JoinScreen with room code entry and profile creation
+
+**Next Steps (TV Implementation):**
+- 🚧 Phase 3 TV: Implement TVLobby to display room code and connected players
+- 🚧 TV should create room on load and listen to `room_update` events
+- 🚧 Display player list with host indicator
+
+See `docs/MVP-TASKLIST.md` and `docs/PHASE3-PROGRESS.md` for detailed progress.
+
+---
 
 ## ✅ MVP Checklist
 
@@ -730,13 +745,13 @@ Additional setup (later):
 
 ### Core
 
-- [ ] Node + Express + Socket.io backend  
+- [x] Node + Express + Socket.io backend ✅
 
-- [ ] React app with TV and phone routes  
+- [x] React app with TV and phone routes ✅
 
-- [ ] Room creation + host detection  
+- [x] Room creation + host detection ✅ (Backend complete, TV UI next)
 
-- [ ] Profile creation (name, birthday, gender)  
+- [x] Profile creation (name, birthday, gender) ✅
 
 - [ ] Team selection (random/manual)  
 
@@ -754,7 +769,7 @@ Additional setup (later):
 
 - [ ] End-of-game summary  
 
-- [ ] Persistent player stats  
+- [ ] Persistent player stats (basic structure in place)  
 
 
 
