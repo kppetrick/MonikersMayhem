@@ -1,10 +1,10 @@
-# MonikersMayhem 🎉  
+# CircumAct 🎉  
 
-_A Raspberry Pi party console for Monikers-style chaos_
+_A Raspberry Pi party console for CircumAct-style chaos_
 
 
 
-MonikersMayhem is a multiplayer, real-time party game inspired by **Monikers**, built to run as a **self-contained Raspberry Pi party console** using HDMI output and phone controllers over a local Wi-Fi hotspot.
+CircumAct is a multiplayer, real-time party game combining charades and Taboo-style gameplay, built to run as a **self-contained Raspberry Pi party console** using HDMI output and phone controllers over a local Wi-Fi hotspot.
 
 
 
@@ -16,7 +16,7 @@ MonikersMayhem is a multiplayer, real-time party game inspired by **Monikers**, 
 
 - The TV shows the main game: teams, timer, cards, and scores.
 
-- The same drafted deck is reused across all rounds, Monikers-style.
+- The same drafted deck is reused across all rounds, CircumAct-style.
 
 
 
@@ -482,7 +482,7 @@ The backend handles:
 
 - Display `/tv` UI on HDMI through Chromium  
 
-- Host a dedicated Wi-Fi Access Point ("MonikersMayhem")  
+- Host a dedicated Wi-Fi Access Point ("CircumAct")  
 
 - Allow phones to join locally (no internet needed)  
 
@@ -500,7 +500,7 @@ The backend handles:
 
 ```
 
-MonikersMayhem/
+CircumAct/
 
   README.md
 
@@ -666,9 +666,9 @@ MonikersMayhem/
 
 ```bash
 
-git clone https://github.com/<your-user>/MonikersMayhem
+git clone https://github.com/<your-user>/CircumAct
 
-cd MonikersMayhem
+cd CircumAct
 
 
 

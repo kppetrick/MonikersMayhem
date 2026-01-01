@@ -10,7 +10,7 @@ export const TVLayout: React.FC = () => {
   // TODO: conditionally render lobby vs in-game vs summary based on game state
   return (
     <div className="tv-root">
-      <h1>MonikersMayhem – TV</h1>
+      <h1>CircumAct – TV</h1>
       <p>Status: {connected ? "Connected" : "Connecting..."}</p>
       <TVRoundStatus />
       <TVScoreboard />

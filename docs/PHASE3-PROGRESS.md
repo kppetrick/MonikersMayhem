@@ -1,132 +1,88 @@
 # Phase 3 - Lobby & Profiles - Current Progress
 
-**Branch:** `phase3-step3-tv-lobby`  
-**Status:** ✅ **PHASE 3 COMPLETE** - Ready for Phase 4  
+**Status:** 🔄 **IN PROGRESS** - Frontend components reset for rebuild  
 **Last Updated:** [Current Session]
 
-## ✅ Step 1 - Helper Functions in players.js (COMPLETE)
+## ✅ Backend Complete
 
-**Task:** Add three helper functions to `server/models/players.js`:
+**All backend Phase 3 objectives achieved:**
 
-1. ✅ `formatName(name)` - Capitalize first letter of each word
-   - Input: "kyle" → Output: "Kyle"
-   - Input: "john smith" → Output: "John Smith"
-   
-2. ✅ `calculateAge(birthday)` - Calculate age from YYYY-MM-DD format
-   - Input: "1990-05-15" → Output: 34 (current age)
-   - Handles leap years, future dates, edge cases
-   
-3. ✅ `getAgeRange(age)` - Map age to bucket
-   - Input: 34 → Output: "31-35"
-   - Buckets: "10 and under" (0-10), "11-15", "16-20", "21-25", "26-30", "31-35", "36-40", "41+" (41 and older)
-
-**Also implemented:**
+### Step 1 - Helper Functions in players.js (COMPLETE)
+- ✅ `formatName(name)` - Capitalize first letter of each word
+- ✅ `calculateAge(birthday)` - Calculate age from YYYY-MM-DD format
+- ✅ `getAgeRange(age)` - Map age to bucket
 - ✅ `findOrCreateProfile(name, birthday, gender)` - Creates/finds profile
 - ✅ `getProfileById(profileId)` - Retrieves profile
-- ✅ Comprehensive tests in `server/models/__tests__/players.test.js`
 
-## ✅ Step 2 - Room Management in gameState.js (COMPLETE)
+### Step 2 - Room Management in gameState.js (COMPLETE)
+- ✅ `getRoom(roomCode)` - Get room (throws if doesn't exist)
+- ✅ `addPlayerToRoom(roomCode, socketId, profile)` - Add player, auto-assign host
+- ✅ `removePlayerFromRoom(roomCode, socketId)` - Remove player, handle host reassignment
+- ✅ `getPlayerBySocketId(roomCode, socketId)` - Find player by socketId
+- ✅ `getPlayerByProfileId(roomCode, profileId)` - Find player by profileId
+- ✅ `setHost(roomCode, profileId)` - Transfer host status
+- ✅ `handlePlayerDisconnect(io, socket)` - Handle disconnections
 
-**Task:** Add room management helper functions to `server/game/gameState.js`
-
-**Tests written:** ✅ Comprehensive test suite in `server/game/__tests__/gameState.test.js`
-
-**Functions implemented:**
-1. ✅ `getRoom(roomCode)` - Get room (throws if doesn't exist)
-2. ✅ `addPlayerToRoom(roomCode, socketId, profile)` - Add player, auto-assign host for first player, handle reconnection
-3. ✅ `removePlayerFromRoom(roomCode, socketId)` - Remove player, auto-assign new host if host disconnects
-4. ✅ `getPlayerBySocketId(roomCode, socketId)` - Find player by socketId
-5. ✅ `getPlayerByProfileId(roomCode, profileId)` - Find player by profileId
-6. ✅ `setHost(roomCode, profileId)` - Transfer host status
-7. ✅ `handlePlayerDisconnect(io, socket)` - Handle disconnections and host reassignment
-
-## ✅ Step 3 - Socket Handlers (COMPLETE)
-
-**Implemented:**
+### Step 3 - Socket Handlers (COMPLETE)
 - ✅ `create_profile` socket handler - Creates/finds profile and returns profileId
 - ✅ `create_room` socket handler - Generates unique 5-character room code
 - ✅ `join_room` socket handler - Adds player to room and broadcasts `room_update` event
+- ✅ `validate_room` socket handler - Validates room code and returns connected player IDs
 - ✅ Disconnect handling - Properly removes players and reassigns host
+- ✅ `game_state` event - Emits full game state to all players in room
 
-## ✅ Step 4 - Phone Frontend (COMPLETE)
+## 🔄 Frontend - Reset for Rebuild
 
-**Implemented:**
-- ✅ `JoinScreen.tsx` - Full two-step flow:
-  - Step 1: Enter 5-character room code
-  - Step 2: Select existing profile or create new profile
+**Decision:** Frontend components reset to placeholders for rebuild to improve understanding and maintainability.
+
+### Phone Frontend
+- [ ] `JoinScreen.tsx` - **RESET** - Needs rebuild:
+  - Two-step flow: room code entry → profile selection/creation
   - Form validation and error handling
   - LocalStorage profile persistence
   - Socket integration for `create_profile` and `join_room`
-  - Listens to `room_update` events
+  - **Navigation after join** - Route to appropriate screen based on game state
+  - Listen to `game_state` events
 
-## ✅ Step 5 - TV Frontend (COMPLETE)
+- [ ] `PhoneLayout.tsx` - Needs auto-routing:
+  - Route based on game state (lobby → draft → clue/spectate/host)
+  - Use `useGameState` hook to determine current screen
 
-**Task:** Implement `TVLobby.tsx` to display room and players
+- [ ] `useGameState.ts` hook - **NEEDS IMPLEMENTATION**:
+  - Subscribe to `game_state` socket events
+  - Return current game state, player role, room status
+  - Helpers for determining which screen to show
 
-**Completed:**
-1. ✅ TV creates/joins a room on load automatically
-2. ✅ Display room code prominently (large, visible)
-3. ✅ Listen to `room_update` socket events
-4. ✅ Show list of connected players with names
-5. ✅ Show host indicator (👑 Host badge)
-6. ✅ Show placeholder teams section (no assignment yet)
-7. ✅ Handle loading/error states
-8. ✅ Show disconnected players (greyed out)
-9. ✅ Comprehensive test coverage (24 tests, all passing)
+### TV Frontend
+- [ ] `TVLobby.tsx` - **RESET** - Needs rebuild:
+  - Create/join room on TV load automatically
+  - Display room code prominently
+  - Listen to `room_update` and `game_state` socket events
+  - Show list of connected players with host indicators
+  - Show placeholder teams section
+  - Handle loading/error states
 
-**Additional Features:**
-- ✅ Room code validation on phone side (prevents joining invalid rooms)
-- ✅ Duplicate join prevention (blocks same profile from multiple devices)
-- ✅ Profile filtering (hides profiles already in room from selection)
-- ✅ Error handling and user feedback
+- [ ] `TVLayout.tsx` - Needs conditional rendering:
+  - Show lobby when status is "lobby"
+  - Show game view when status is "draft" or "round"
+  - Show summary when status is "finished"
 
 ## Key Decisions Made
 
-- Room code: Random 5-character code displayed on TV (Jackbox-style)
-- Name formatting: Capitalize first letter of EACH word ("john smith" → "John Smith")
-- Age calculation: From birthday (YYYY-MM-DD), exact match required
-- Age ranges: "10 and under", "11-15", "16-20", "21-25", "26-30", "31-35", "36-40", "41+"
-- Host: First player in room = host automatically
-- Broadcasting: When player joins, broadcast `room_update` event to all clients in room (TV + phones)
-- Display name: Separate field for fun names on TV/phone (future enhancement - not in MVP)
-- Profile memory: Remember last profile on same device (localStorage) ✅
-- Room creation: TV creates room on load, players join with room code
-- Reconnection: Players can reconnect and restore their state (host status, team assignment)
+- **Room code:** Random 5-character code displayed on TV (Jackbox-style)
+- **Name formatting:** Capitalize first letter of EACH word ("john smith" → "John Smith")
+- **Age calculation:** From birthday (YYYY-MM-DD), exact match required
+- **Age ranges:** "10 and under", "11-15", "16-20", "21-25", "26-30", "31-35", "36-40", "41+"
+- **Host:** First player in room = host automatically
+- **Broadcasting:** When player joins, broadcast `room_update` and `game_state` events to all clients in room
+- **Room creation:** TV creates room on load, players join with room code
+- **Reconnection:** Players can reconnect and restore their state (host status, team assignment)
+- **Frontend approach:** Rebuilding components from scratch for better understanding and maintainability
 
-## ✅ Phase 3 Complete - Summary
+## Next Steps
 
-**All Phase 3 objectives achieved:**
-
-1. ✅ **Backend:**
-   - Profile management (create/find profiles)
-   - Room management (create, join, disconnect handling)
-   - Socket events (create_profile, create_room, join_room, validate_room)
-   - Player state management (host assignment, reconnection)
-
-2. ✅ **Phone Frontend:**
-   - JoinScreen with room code entry
-   - Profile selection/creation
-   - Room code validation
-   - Duplicate join prevention
-   - Profile filtering
-
-3. ✅ **TV Frontend:**
-   - TVLobby component fully implemented
-   - Automatic room creation on load
-   - Room code display
-   - Player list with host indicators
-   - Real-time updates via room_update events
-   - Disconnected player handling
-
-4. ✅ **Testing:**
-   - Comprehensive test coverage (24 tests for TVLobby)
-   - All tests passing
-   - Manual testing verified
-
-## Next Steps - Phase 4: Team Management
-
-Ready to proceed to Phase 4 which includes:
-- Team assignment (random/manual)
-- Host controls for team management
-- Team display on TV
-
+1. **Implement `useGameState` hook** - Subscribe to `game_state` events
+2. **Rebuild `JoinScreen`** - Full join flow with navigation
+3. **Rebuild `TVLobby`** - Room display and player list
+4. **Add auto-routing** - `PhoneLayout` routes based on game state
+5. **Add conditional rendering** - `TVLayout` shows appropriate view based on game phase
