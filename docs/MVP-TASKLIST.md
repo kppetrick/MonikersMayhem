@@ -1,4 +1,4 @@
-# MonikersMayhem – MVP Task List
+# CircumAct – MVP Task List
 
 This document breaks the MVP into concrete steps so the backend, frontend, and Raspberry Pi setup can be built in a sensible order.
 
@@ -242,23 +242,25 @@ At the end of Phase 2, you should be able to:
 
 
 
-- [x] `JoinScreen.tsx` ✅
+- [ ] `JoinScreen.tsx`
 
-  - [x] Form for:
+  - [ ] Form for:
 
-    - Name ✅
+    - Name
 
-    - Birthday ✅
+    - Birthday
 
-    - Gender ✅
+    - Gender
 
-  - [x] Room code entry (5-character) ✅
+  - [ ] Room code entry (5-character)
 
-  - [x] Profile selection from localStorage ✅
+  - [ ] Profile selection from localStorage
 
-  - [x] On submit → emit `create_profile` ✅
+  - [ ] On submit → emit `create_profile`
 
-  - [x] Then emit `join_room` with room code ✅
+  - [ ] Then emit `join_room` with room code
+
+  - [ ] Navigate to appropriate screen after join (based on game state)
 
 
 
@@ -266,27 +268,29 @@ At the end of Phase 2, you should be able to:
 
 
 
-- [x] `TVLobby.tsx` ✅
+- [ ] `TVLobby.tsx`
 
-  - [x] Create/join room on TV load (or use room code from URL) ✅
+  - [ ] Create/join room on TV load (or use room code from URL)
 
-  - [x] Display room code prominently ✅
+  - [ ] Display room code prominently
 
-  - [x] Show list of connected players ✅
+  - [ ] Show list of connected players
 
-  - [x] Show host indicator ✅
+  - [ ] Show host indicator
 
-  - [x] Listen to `room_update` socket events ✅
+  - [ ] Listen to `room_update` socket events
 
-  - [x] Show placeholder teams (no assignment yet) ✅
+  - [ ] Show placeholder teams (no assignment yet)
 
 
 
 At the end of Phase 3:
 
-- [x] Players can join on phones ✅
+- [ ] Players can join on phones
 
-- [x] TV shows everyone in the lobby ✅
+- [ ] TV shows everyone in the lobby
+
+- [ ] Navigation works after joining (phone routes to appropriate screen)
 
 - [x] Profiles are created/stored ✅
 
@@ -462,7 +466,7 @@ At the end of Phase 5:
 
 
 
-**Goal:** Implement core Monikers-style rounds and turn flow with timer and scoring.
+**Goal:** Implement core CircumAct-style rounds and turn flow with timer and scoring.
 
 
 

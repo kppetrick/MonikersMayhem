@@ -1,5 +1,5 @@
 // server/game/rounds.js
-// Round lifecycle logic for MonikersMayhem.
+// Round lifecycle logic for CircumAct.
 
 const ROUND_SEQUENCE = [
   { id: 1, name: "Say Anything", type: "anything" },

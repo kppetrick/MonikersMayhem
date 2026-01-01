@@ -1,6 +1,6 @@
-# MonikersMayhem – Architecture Overview
+# CircumAct – Architecture Overview
 
-This document describes the high-level architecture of MonikersMayhem: a Monikers-inspired party game that runs as a Raspberry Pi "console" with TV + phone UIs.
+This document describes the high-level architecture of CircumAct: a charades and Taboo-style party game that runs as a Raspberry Pi "console" with TV + phone UIs.
 
 
 
@@ -12,7 +12,7 @@ This document describes the high-level architecture of MonikersMayhem: a Moniker
 
 
 
-MonikersMayhem consists of three main parts:
+CircumAct consists of three main parts:
 
 
 
@@ -316,7 +316,7 @@ Located in `server/`.
 
 - `baseDeck.json`
 
-  - Card data copied from physical Monikers decks (answer + description).
+  - Card data copied from physical CircumAct decks (answer + description).
 
 
 
@@ -522,7 +522,7 @@ In-memory state (per active room/game) is held in `gameState.js` and is rebuilt 
 
 - Start Chromium in kiosk mode pointing to `/tv`.
 
-- Configure Pi as Wi-Fi Access Point (`MonikersMayhem` SSID).
+- Configure Pi as Wi-Fi Access Point (`CircumAct` SSID).
 
 - Optionally:
 

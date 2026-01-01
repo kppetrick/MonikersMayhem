@@ -1,4 +1,4 @@
-# MonikersMayhem - Hardware Shopping List
+# CircumAct - Hardware Shopping List
 
 **Last Updated:** [Current Session]  
 **Recommended Setup:** Raspberry Pi 5 (8GB) with NVMe Storage

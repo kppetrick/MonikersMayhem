@@ -1,5 +1,5 @@
 // server/server.js
-// Main Express + Socket.io server entrypoint for MonikersMayhem.
+// Main Express + Socket.io server entrypoint for CircumAct.
 
 const http = require("http");
 const express = require("express");
@@ -28,6 +28,6 @@ app.get("/health", (req, res) => {
 initSocket(server);
 
 server.listen(PORT, () => {
-  console.log(`MonikersMayhem server listening on port ${PORT}`);
+  console.log(`CircumAct server listening on port ${PORT}`);
 });
 
